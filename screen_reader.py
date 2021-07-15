@@ -21,7 +21,7 @@ with mss.mss() as sct:
         found = cv.circle(screenshot, (max_loc[0] + 11, max_loc[1] + 13), 17, (0, 0, 255), 2)
         scaled_found = utils.resize_img(found, 70)
         scaled_result = utils.resize_img(result, 70)
-        
+
         cv.imshow("Best matches", scaled_found)
             # Press "q" to quit
         if cv.waitKey(30) & 0xFF == ord("q"):
