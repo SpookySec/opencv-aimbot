@@ -6,14 +6,17 @@ import pyautogui as ag
 import win32api, win32con
 from time import sleep
 
-needle = cv.imread('./images/needle3.png', cv.IMREAD_GRAYSCALE)
+needle = cv.imread('./images/needle_cartel2.png', cv.IMREAD_GRAYSCALE)
 monitor = {"top": 0, "left": 0, "width": 1920, "height": 1080}
 sct = mss.mss()
-threshold = 0.65
+threshold = 0.75
+
 scale = 0.7
-w, h = 50, 60
+w, h = 40, 50
 x_off, y_off = 20, 50
 screen_center = (960, 540)
+
+sleep(2)
 
 while True:
 
@@ -58,8 +61,9 @@ while True:
 
         win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, int((entity_center[0] - screen_center[0]) * scale), int((entity_center[1] - screen_center[1]) * scale), 0, 0 )
         shoot_x, shoot_y = int((entity_center[0] - screen_center[0]) * scale), int((entity_center[1] - screen_center[1]) * scale)
-        utils.shoot(shoot_x, shoot_y)
-    sleep(1)
+        for _ in range(3):
+            utils.shoot(shoot_x, shoot_y)
+    sleep(0.1)
         # Press "q" to quit
     # if cv.waitKey(1) & 0xFF == ord("q"):
     #     cv.destroyAllWindows()
