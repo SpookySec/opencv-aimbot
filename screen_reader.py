@@ -10,9 +10,10 @@ needle = cv.imread('./images/needle3.png', cv.IMREAD_GRAYSCALE)
 monitor = {"top": 0, "left": 0, "width": 1920, "height": 1080}
 sct = mss.mss()
 threshold = 0.75
+scale = 0.7
 w, h = 50, 60
 x_off, y_off = 20, 40
-center = (960, 540)
+screen_center = (960, 540)
 
 while True:
 
@@ -20,7 +21,7 @@ while True:
     screenshot = np.array(sct.grab(monitor))
 
     # Current screen (GRAY)
-    haystack = cv.cvtColor(np.array(sct.grab(monitor)), cv.COLOR_BGR2GRAY)
+    haystack = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
 
     # Results from template matching
     result = cv.matchTemplate(haystack, needle, cv.TM_CCOEFF_NORMED)
@@ -40,24 +41,22 @@ while True:
         print("[!] No heads found :(")
         exit(1)
 
-    print(f"\r[+] Found {len(heads)} heads", end="")
+    print(f"\r[+] Found {len(heads)} heads\n", end="")
 
     closest = heads[0]
 
+    entity_center = (closest[0] + w // 2, closest[1] + h // 2)
+
+    print(entity_center)
     rect = cv.rectangle(screenshot, (closest[0], closest[1]), (closest[0] + w, closest[1] + h), (0, 255, 0), 2)
-    line = cv.line(rect, center, (closest[0], closest[1]), (255, 255, 255), 2)
-
-
-    scale = 0.7
-    x = int((closest[0] - center[0]) * scale)
-    y = int((closest[1] - center[1]) * scale)
+    line = cv.line(rect, screen_center, entity_center, (255, 255, 255), 2)
 
 
     # cv.imshow("Best matches", utils.resize_img(line, 75))
 
-    cv.imshow('Ghost Recon', utils.resize_img(screenshot, 75))
-    sleep(2)
-    utils.move_to(x, y)
+    # utils.move_to(x, y)
+
+    win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, int((entity_center[0] - screen_center[0]) * scale), int((entity_center[1] - screen_center[1]) * scale), 0, 0 )
     # utils.move_to(int(max_loc[0] - 960), int(max_loc[1] - 540))
 
         # Press "q" to quit
